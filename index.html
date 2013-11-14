@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<!-- 
+	 You shouldn't look at this source - the script is minimized.
+	 If you're wanting to look at the script/form, look here: https://gist.github.com/andrewjkerr/5368527
+	 I'll be adding in the cookie implementation to my gists soon.
+-->
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Grade Calculator | Fall 2013</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+
+      /* Custom page CSS
+      -------------------------------------------------- */
+
+      #wrap > .container {
+        padding-top: 60px;
+      }
+      .container .credit {
+        margin: 20px 0;
+      }
+
+      code {
+        font-size: 80%;
+      }
+
+    </style>
+    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+	<script src="jquery-cookie/jquery.cookie.js"></script>
+	
+	<!-- Hides the class grade calculators until it is clicked on -->
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$(".calc").hide();
+		$(".scale").hide();
+		//toggle the componenet with class msg_body
+		$(".className").click(function()
+		{
+			$(this).nextAll(".calc:first").slideToggle(500);
+		})
+		$(".activateScale").click(function()
+		{
+			$(this).nextAll(".scale:first").slideToggle(500);
+		});
+	});
+	</script>
+	
+	<!-- Set grades on load from cookie -->
+	<script>
+		function loadMANGrades(){
+		
+			$.cookie.json = true;
+			
+			var manCookieGrades = $.cookie('mangrades');
+			try{
+				document.getElementById('quiz1').value = manCookieGrades.quiz1;
+				document.getElementById('quiz2').value = manCookieGrades.quiz2;
+				document.getElementById('quiz3').value = manCookieGrades.quiz3;
+				document.getElementById('exam1').value = manCookieGrades.exam1;	
+				document.getElementById('exam2').value = manCookieGrades.exam2;
+				document.getElementById('exam3').value = manCookieGrades.exam3;
+				document.getElementById('extra').value = manCookieGrades.extra;
+				setMANGrades();	
+			}
+			catch(e){
+				// do nothing!
+			}
+		}
+	</script>
+	<script>
+		function loadEELGrades(){
+			
+			$.cookie.json = true;
+						
+			var eelCookieGrades = $.cookie('eelgrades');
+			try{
+				document.getElementById('lab1').value = eelCookieGrades.lab1;
+				document.getElementById('lab2').value = eelCookieGrades.lab2;
+				document.getElementById('lab3').value = eelCookieGrades.lab3;
+				document.getElementById('lab4').value = eelCookieGrades.lab4;
+				document.getElementById('lab5').value = eelCookieGrades.lab5;
+				document.getElementById('lab6').value = eelCookieGrades.lab6;
+				document.getElementById('lab7').value = eelCookieGrades.lab7;
+				document.getElementById('lab8').value = eelCookieGrades.lab8;
+				document.getElementById('lab9').value = eelCookieGrades.lab9;
+				document.getElementById('hw1').value = eelCookieGrades.hw1;
+				document.getElementById('hw2').value = eelCookieGrades.hw2;
+				document.getElementById('hw3').value = eelCookieGrades.hw3;
+				document.getElementById('hw4').value = eelCookieGrades.hw4;
+				document.getElementById('hw5').value = eelCookieGrades.hw5;
+				document.getElementById('hw6').value = eelCookieGrades.hw6;
+				document.getElementById('hw7').value = eelCookieGrades.hw7;
+				document.getElementById('hw8').value = eelCookieGrades.hw8;
+				document.getElementById('hw9').value = eelCookieGrades.hw9;
+				document.getElementById('hw10').value = eelCookieGrades.hw10;
+				document.getElementById('eelexam1').value = eelCookieGrades.eelexam1;	
+				document.getElementById('eelexam2').value = eelCookieGrades.eelexam2;	
+				document.getElementById('eelquiz').value = eelCookieGrades.eelquiz;
+				setEELGrades();
+			}
+			catch(e){
+				//do nothing!
+			}
+		}
+	</script>
+	<script>
+		function loadCDAGrades(){
+		
+			$.cookie.json = true;
+			
+			var cdaCookieGrades = $.cookie('cdagrades');
+			try{
+				document.getElementById('cdaquiz1').value = cdaCookieGrades.cdaquiz1;
+				document.getElementById('cdaquiz2').value = cdaCookieGrades.cdaquiz2;
+				document.getElementById('cdaquiz3').value = cdaCookieGrades.cdaquiz3;
+				document.getElementById('cdaquiz4').value = cdaCookieGrades.cdaquiz4;
+				document.getElementById('cdaquiz5').value = cdaCookieGrades.cdaquiz5;
+				document.getElementById('cdahw1').value = cdaCookieGrades.cdahw1;
+				document.getElementById('cdahw2').value = cdaCookieGrades.cdahw2;
+				document.getElementById('cdahw3').value = cdaCookieGrades.cdahw3;
+				document.getElementById('cdahw4').value = cdaCookieGrades.cdahw4;
+				document.getElementById('cdahw5').value = cdaCookieGrades.cdahw5;
+				document.getElementById('cdahw6').value = cdaCookieGrades.cdahw6;
+				document.getElementById('cdaexam1').value = cdaCookieGrades.cdaexam1;
+				document.getElementById('cdaexam2').value = cdaCookieGrades.cdaexam2;
+				document.getElementById('cdaexam3').value = cdaCookieGrades.cdaexam3;
+				document.getElementById('cdafinal').value = cdaCookieGrades.cdafinal;
+				setCDAGrades();
+			}
+			catch(e){
+				// do nothing!
+			}
+			
+		}
+	</script>
+	
+	<!-- Script to calculate Management grades -->
+	<script>
+		function setMANGrades() {
+		
+			$.cookie.json = true;
+			
+			// Define those variables!
+			var quiz1 = parseFloat(document.getElementById('quiz1').value);
+			var quiz2 = parseFloat(document.getElementById('quiz2').value);
+			var quiz3 = parseFloat(document.getElementById('quiz3').value);
+			var exam1 = parseFloat(document.getElementById('exam1').value);	
+			var exam2 = parseFloat(document.getElementById('exam2').value);	
+			var exam3 = parseFloat(document.getElementById('exam3').value);
+			var extra = parseFloat(document.getElementById('extra').value);
+			
+			var mancookie = { quiz1: quiz1, quiz2: quiz2, quiz3: quiz3, exam1: exam1, exam2: exam2, exam3: exam3, extra:extra };
+			$.cookie('mangrades',mancookie);
+			
+			// Calculate the total points earned!	
+			var totalPoints = quiz1 + quiz2 + quiz3 + exam1 + exam2 + exam3 + extra;
+			document.getElementById('total').value = totalPoints;
+			
+			// Select letter grade!
+			if(totalPoints >= 930){
+				document.getElementById('letter').value = "A";
+			}
+			
+			else if(929.9 >= totalPoints && totalPoints >= 900){
+				document.getElementById('letter').value = "A-";
+			}
+			
+			else if(899.9 >= totalPoints && totalPoints >= 866.7){
+				document.getElementById('letter').value = "B+";
+			}
+			
+			else if(866.6 >= totalPoints && totalPoints >= 830){
+				document.getElementById('letter').value = "B";
+			}
+			
+			else if(829.9 >= totalPoints && totalPoints >= 800){
+				document.getElementById('letter').value = "B-";
+			}
+			
+			else if(799.9 >= totalPoints && totalPoints >= 766.7){
+				document.getElementById('letter').value = "C+";
+			}
+			
+			else if(766.6 >= totalPoints && totalPoints >= 730){
+				document.getElementById('letter').value = "C";
+			}
+			
+			else if(729.9 >= totalPoints && totalPoints >= 700){
+				document.getElementById('letter').value = "C-";
+			}
+			
+			else if(699.9 >= totalPoints && totalPoints >= 666.7){
+				document.getElementById('letter').value = "D+";
+			}
+			
+			else if(666.6 >= totalPoints && totalPoints >= 630){
+				document.getElementById('letter').value = "D";
+			}
+			
+			else if(629.9 >= totalPoints && totalPoints >= 600){
+				document.getElementById('letter').value = "D-";
+			}
+			
+			else{
+				document.getElementById('letter').value = "E";
+			}
+		}
+	</script>
+	
+	<!-- Script to calculate Microprocessor grades -->
+	<script>
+		function setEELGrades() {
+			// Define those variables!
+			var lab1 = parseFloat(document.getElementById('lab1').value);
+			var lab2 = parseFloat(document.getElementById('lab2').value);
+			var lab3 = parseFloat(document.getElementById('lab3').value);
+			var lab4 = parseFloat(document.getElementById('lab4').value);
+			var lab5 = parseFloat(document.getElementById('lab5').value);
+			var lab6 = parseFloat(document.getElementById('lab6').value);
+			var lab7 = parseFloat(document.getElementById('lab7').value);
+			var lab8 = parseFloat(document.getElementById('lab8').value);
+			var lab9 = parseFloat(document.getElementById('lab9').value);
+			var hw1 = parseFloat(document.getElementById('hw1').value);
+			var hw2 = parseFloat(document.getElementById('hw2').value);
+			var hw3 = parseFloat(document.getElementById('hw3').value);
+			var hw4 = parseFloat(document.getElementById('hw4').value);
+			var hw5 = parseFloat(document.getElementById('hw5').value);
+			var hw6 = parseFloat(document.getElementById('hw6').value);
+			var hw7 = parseFloat(document.getElementById('hw7').value);
+			var hw8 = parseFloat(document.getElementById('hw8').value);
+			var hw9 = parseFloat(document.getElementById('hw9').value);
+			var hw10 = parseFloat(document.getElementById('hw10').value);
+			var eelexam1 = parseFloat(document.getElementById('eelexam1').value);	
+			var eelexam2 = parseFloat(document.getElementById('eelexam2').value);	
+			var eelquiz = parseFloat(document.getElementById('eelquiz').value);
+			
+			// Calculate the total points earned!	
+			var labGrade = ((lab1 + lab2 + lab3 + lab4 + lab5 + lab6 + lab7 + lab8 + lab9) / 900.0) * 100.0;
+			var hwGrade = ((hw1 + hw2 + hw3 + hw4 + hw5 + hw6 + hw7 + hw8 + hw9 + hw10) / 40.0) * 100.0;
+			var percent = labGrade * 0.26 + hwGrade * 0.04 + eelexam1 * 0.28 + eelexam2 * 0.28 + eelquiz * 0.14;
+			document.getElementById('finalPercent').value = percent;
+			
+			// Set the cookie for Microprocessor grades!
+			var eelcookie = { lab1: lab1, lab2: lab2, lab3: lab3, lab4: lab4, lab5: lab5, lab6: lab6, lab7: lab7, lab8: lab8, lab9: lab9, hw1: hw1, hw2: hw2, hw3: hw3, hw4: hw4, hw5: hw5, hw6: hw6, hw7: hw7, hw8: hw8, hw9: hw9, hw10: hw10, eelexam1: eelexam1, eelexam2: eelexam2, eelquiz: eelquiz };
+			$.cookie('eelgrades',eelcookie);
+			
+			// Check for lab requirement!
+			if(labGrade >= 65){
+				document.getElementById('passlab').value = "Yes, you passed the lab requirement!";
+			}
+			
+			else{
+				document.getElementById('passlab').value = "No, you have not passed the lab requirement.";
+			}
+
+		}
+	</script>
+
+	<!-- Script to calculate Computer Organization grades -->
+	<script>
+		function setCDAGrades() {
+			// Define those variables!
+			var cdaquiz1 = parseFloat(document.getElementById('cdaquiz1').value);
+			var cdaquiz2 = parseFloat(document.getElementById('cdaquiz2').value);
+			var cdaquiz3 = parseFloat(document.getElementById('cdaquiz3').value);
+			var cdaquiz4 = parseFloat(document.getElementById('cdaquiz4').value);
+			var cdaquiz5 = parseFloat(document.getElementById('cdaquiz5').value);
+			var cdahw1 = parseFloat(document.getElementById('cdahw1').value);
+			var cdahw2 = parseFloat(document.getElementById('cdahw2').value);
+			var cdahw3 = parseFloat(document.getElementById('cdahw3').value);
+			var cdahw4 = parseFloat(document.getElementById('cdahw4').value);
+			var cdahw5 = parseFloat(document.getElementById('cdahw5').value);
+			var cdahw6 = parseFloat(document.getElementById('cdahw6').value);
+			var cdaexam1 = parseFloat(document.getElementById('cdaexam1').value);	
+			var cdaexam2 = parseFloat(document.getElementById('cdaexam2').value);
+			var cdaexam3 = parseFloat(document.getElementById('cdaexam3').value);	
+			var cdafinal = parseFloat(document.getElementById('cdafinal').value);	
+			
+			// Calculate the total points earned!	
+			var cdaQuizGrade = cdaquiz1 + cdaquiz2 + cdaquiz3 + cdaquiz4 + cdaquiz5;
+			var cdaHWGrade = ((cdahw1 + cdahw2 + cdahw3 + cdahw4 + cdahw5 + cdahw6) / 240.0) * 100.0;
+			var cdaExamGrade = ((cdaexam1 + cdaexam2 + cdaexam3) / 300.0) * 100.0;
+			var cdaPercent = cdaQuizGrade * 0.10 + cdaHWGrade * 0.24 + cdaExamGrade * .42 + cdafinal * .24;
+			document.getElementById('cdaPercent').value = cdaPercent;
+			
+			// Set the cookie for Comp Org grades!
+			var cdacookie = { cdaquiz1: cdaquiz1, cdaquiz2: cdaquiz2, cdaquiz3: cdaquiz3, cdaquiz4: cdaquiz4, cdaquiz5: cdaquiz5, cdahw1: cdahw1, cdahw2: cdahw2, cdahw3: cdahw3, cdahw4: cdahw4, cdahw5: cdahw5, cdahw6: cdahw6, cdaexam1: cdaexam1, cdaexam2: cdaexam2, cdaexam3: cdaexam3, cdafinal: cdafinal };
+			$.cookie('cdagrades',cdacookie);
+			
+			// Select letter grade!
+			if(cdaPercent >= 93){
+				document.getElementById('cdaletter').value = "A";
+			}
+			
+			else if(92.9 >= cdaPercent && cdaPercent >= 90){
+				document.getElementById('cdaletter').value = "A-";
+			}
+			
+			else if(89.9>= cdaPercent && cdaPercent >= 87){
+				document.getElementById('cdaletter').value = "B+";
+			}
+			
+			else if(86.9 >= cdaPercent && cdaPercent >= 83){
+				document.getElementById('cdaletter').value = "B";
+			}
+			
+			else if(82.9 >= cdaPercent && cdaPercent >= 80){
+				document.getElementById('cdaletter').value = "B-";
+			}
+			
+			else if(79.9 >= cdaPercent && cdaPercent >= 77){
+				document.getElementById('cdaletter').value = "C+";
+			}
+			
+			else if(76.9 >= cdaPercent && cdaPercent >= 73){
+				document.getElementById('cdaletter').value = "C";
+			}
+			
+			else if(72.9 >= cdaPercent && cdaPercent >= 70){
+				document.getElementById('cdaletter').value = "C-";
+			}
+			
+			else if(69.9 >= cdaPercent && cdaPercent >= 67){
+				document.getElementById('cdaletter').value = "D+";
+			}
+			
+			else if(66.6 >= cdaPercent && cdaPercent >= 63){
+				document.getElementById('cdaletter').value = "D";
+			}
+			
+			else if(62.9 >= cdaPercent && cdaPercent >= 60){
+				document.getElementById('cdaletter').value = "D-";
+			}
+			
+			else{
+				document.getElementById('cdaletter').value = "E";
+			}
+		}
+	</script>
+  </head>
+
+  <body onload="loadMANGrades(); loadEELGrades(); loadCDAGrades();">
+
+
+    <!-- Part 1: Wrap all page content here -->
+    <div id="wrap">
+
+      <!-- Fixed navbar -->
+      <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+          <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="#">Grade Calculator</a>
+            <div class="nav-collapse collapse">
+              <ul class="nav">
+                <li><a href="http://www.andrewjkerr.com">About Me</a></li>
+				<li><a href="http://lss.at.ufl.edu">MAN3025 Course Page</a></li>
+                <li><a href="http://www.add.ece.ufl.edu/4744/">EEL4744C Course Page</a></li>
+                <li><a href="https://www.cise.ufl.edu/~mssz/CompOrg/Top-Level.html">CDA3101 Course Page</a></li>
+                <li><a href="http://www.andrewjkerr.com/cis4930/">CIS4930 Course Page</a></li>
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
+        </div>
+      </div>
+	  
+      <!-- Begin page content -->
+      <div class="container">
+        <div class="page-header">
+          <h1>Select your class:</h1>
+        </div>
+		<p class="lead"><i><u>DISCLAIMER:</u> I am in no way responsible for any inaccuracies that might occur. However, if you do notice anything, please send me an email at <code><a href="mailto:andrewjkerr47@gmail.com">andrewjkerr47 (AT) gmail (DOT) com</a></code>.</i></p>
+		
+		<!-- Management Grade Calculator -->
+        <p class="lead"><div class="className"><h3>MAN3025 - Principles of Management</p></h3></div>
+		<div class="calc">
+			<form>
+				<table>
+					<p><code><u>QUIZZES</u></code></p>
+					<p>
+						<p>Quiz 1 (out of 60): <input text='text' id='quiz1' value='0' onkeyup='setMANGrades();' />
+						Quiz 2 (out of 90): <input text='text' id='quiz2'  value='0' onkeyup='setMANGrades();' /> 
+						Quiz 3 (out of 90): <input text='text' id='quiz3' value='0' onkeyup='setMANGrades();' /></p>
+					</p>
+					<p><code><u>EXAMS</u></code></p>
+					<p>
+						<p>Exam 1 (out of 200): <input text='text' id='exam1' value='0' onkeyup='setMANGrades();' />
+						Exam 2 (out of 280): <input text='text' id='exam2' value='0' onkeyup='setMANGrades();' />
+						Exam 3 (out of 280): <input text='text' id='exam3' value='0' onkeyup='setMANGrades();' /></p>
+					</p>
+					<p><code><u>EXTRA CREDIT (//UP TO FORTY POINTS)</u></code></p>
+					<p>
+						<p>Extra Credit Earned: <input text='text' id='extra' value='0' onkeyup='setMANGrades();' /></p>
+						<p><em>Remember, all points on <a href="http://www.gatormgt.com">gatormgt.com</a> are worth <u>four</u> points.</em></p>
+					</p>
+					<p><code><u>FINAL GRADE</u></code></p>
+					<p>
+						<p>TOTAL POINTS: <input type='text' id='total' value='0' /></p>
+						<p>LETTER GRADE: <input type='text' id='letter' value='E' /></p>
+					</p>
+				</table>
+			</form>
+			<div class="activateScale"><p><code>Click here for the grading scale!</code></p></div>
+			<div class="scale">
+				<table class = "table table-bordered table-striped">
+					<tr>
+						<td>A</td>
+						<td>930.0 and above</td>
+					</tr>
+					<tr>
+						<td>A-</td>
+						<td>929.9 to 900.0</td>
+					</tr>
+					<tr>
+						<td>B+</td>
+						<td>899.9 to 866.7</td>
+					</tr>
+					<tr>
+						<td>B</td>
+						<td>866.6 to 830.0</td>
+					</tr>
+					<tr>
+						<td>B-</td>
+						<td>829.9 to 800.0</td>
+					</tr>
+					<tr>
+						<td>C+</td>
+						<td>799.9 to 766.7</td>
+					</tr>
+					<tr>
+						<td>C</td>
+						<td>766.6 to 730.0</td>
+					</tr>
+					<tr>
+						<td>C-</td>
+						<td>729.9 to 700.0</td>
+					</tr>
+					<tr>
+						<td>D+</td>
+						<td>699.9 to 666.7</td>
+					</tr>
+					<tr>
+						<td>D</td>
+						<td>666.6 to 630.0</td>
+					</tr>
+					<tr>
+						<td>D-</td>
+						<td>629.9 to 600.0</td>
+					</tr>
+					<tr>
+						<td>E</td>
+						<td>599.9 and below</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<!-- Microprocessors Grade Calculator -->
+		<p class="lead"><div class="className"><h3>EEL4744C - Applications of Microprocessors</p></h3></div>
+		<div class="calc">
+			<form>
+				<table>
+					<p><code><u>LABS (//OUT OF 100)</u></code></p>
+					<p>
+						<p>Lab 1: <input text='text' id='lab1' value='0' onkeyup='setEELGrades();' /> Lab 2: <input text='text' id='lab2' value='0' onkeyup='setEELGrades();' /> Lab 3: <input text='text' id='lab3' value='0' onkeyup='setEELGrades();' /></p>
+						<p>Lab 4: <input text='text' id='lab4' value='0' onkeyup='setEELGrades();' /> Lab 5: <input text='text' id='lab5' value='0' onkeyup='setEELGrades();' /> Lab 6: <input text='text' id='lab6' value='0' onkeyup='setEELGrades();' /></p>
+						<p>Lab 7: <input text='text' id='lab7' value='0' onkeyup='setEELGrades();' /> Lab 8: <input text='text' id='lab8' value='0' onkeyup='setEELGrades();' /> Lab 9: <input text='text' id='lab9' value='0' onkeyup='setEELGrades();' /></p>
+					</p>
+					<p><code><u>HOMEWORK (//OUT OF FOUR)</u></code></p>
+					<p>
+						<p>HW 1: <input text='text' id='hw1' value='0' onkeyup='setEELGrades();' /> HW 2: <input text='text' id='hw2' value='0' onkeyup='setEELGrades();' /> HW 3: <input text='text' id='hw3' value='0' onkeyup='setEELGrades();' /></p>
+						<p>HW 4: <input text='text' id='hw4' value='0' onkeyup='setEELGrades();' /> HW 5: <input text='text' id='hw5' value='0' onkeyup='setEELGrades();' /> HW 6: <input text='text' id='hw6' value='0' onkeyup='setEELGrades();' /></p>
+						<p>HW 7: <input text='text' id='hw7' value='0' onkeyup='setEELGrades();' /> HW 8: <input text='text' id='hw8' value='0' onkeyup='setEELGrades();' /> HW 9: <input text='text' id='hw9' value='0' onkeyup='setEELGrades();' /></p>
+						<p>HW 10: <input text='text' id='hw10' value='0' onkeyup='setEELGrades();' /></p>
+					</p>
+					<p><code><u>EXAMS/FINAL QUIZ (//OUT OF 100)</u></code></p>
+					<p>
+						<p>Exam 1: <input text='text' id='eelexam1' value='0' onkeyup='setEELGrades();' /> Exam 2: <input text='text' id='eelexam2' value='0' onkeyup='setEELGrades();' /> Final Quiz: <input text='text' id='eelquiz' value='0' onkeyup='setEELGrades();' /></p>
+					</p>
+					<p><code><u>FINAL GRADE (WITHOUT CURVE) (// GRADED ON A STANDARD SCALE)</u></code></p>
+					<p>
+						<p>FINAL PERCENTAGE: <input type='text' id='finalPercent' value='0' /></p>
+						<p>LAB REQUIREMENT: <input type='text' id='passlab' value='No, you have not passed the lab requirement.' /></p>
+					</p>
+				</table>
+			</form>
+		</div>
+      
+		<!-- Computer Organization Grade Calculator -->
+        <p class="lead"><div class="className"><h3>CDA3101 - Computer Organization</p></h3></div>
+		<div class="calc">
+			<form>
+				<table>
+					<p><code><u>QUIZZES (//OUT OF 20 POINTS)</u></code></p>
+					<p>
+						<p>Quiz 1: <input text='text' id='cdaquiz1' value='0' onkeyup='setCDAGrades();' />
+						Quiz 2: <input text='text' id='cdaquiz2'  value='0' onkeyup='setCDAGrades();' /> 
+						Quiz 3: <input text='text' id='cdaquiz3' value='0' onkeyup='setCDAGrades();' /></p>
+						<p>Quiz 4: <input text='text' id='cdaquiz4' value='0' onkeyup='setCDAGrades();' />
+						Quiz 5: <input text='text' id='cdaquiz5' value='0' onkeyup='setCDAGrades();' /></p>
+					</p>
+					<p><code><u>HW (//OUT OF 40 POINTS)</u></code></p>
+					<p>
+						<p>HW 1: <input text='text' id='cdahw1' value='0' onkeyup='setCDAGrades();' />
+						HW 2: <input text='text' id='cdahw2'  value='0' onkeyup='setCDAGrades();' /> 
+						HW 3: <input text='text' id='cdahw3' value='0' onkeyup='setCDAGrades();' /></p>
+						<p>HW 4: <input text='text' id='cdahw4' value='0' onkeyup='setCDAGrades();' />
+						HW 5: <input text='text' id='cdahw5' value='0' onkeyup='setCDAGrades();' />
+						HW 6: <input text='text' id='cdahw6' value='0' onkeyup='setCDAGrades();' /></p>
+					</p>
+					<p><code><u>EXAMS (//ENTER PERCENTAGE) </u></code></p>
+					<p>
+						<p>Exam 1: <input text='text' id='cdaexam1' value='0' onkeyup='setCDAGrades();' />
+						Exam 2: <input text='text' id='cdaexam2' value='0' onkeyup='setCDAGrades();' />
+						Exam 3: <input text='text' id='cdaexam3' value='0' onkeyup='setCDAGrades();' /></p>
+						<p>Final Exam: <input text='text' id='cdafinal' value='0' onkeyup='setCDAGrades();' /></p>
+					</p>
+					<p><code><u>FINAL GRADE</u></code></p>
+					<p>
+						<p>PERCENTAGE: <input type='text' id='cdaPercent' value='0' /></p>
+						<p>LETTER GRADE: <input type='text' id='cdaletter' value='E' /></p>
+					</p>
+				</table>
+			</form>
+			<div class="activateScale"><p><code>Click here for the grading scale!</code></p></div>
+			<div class="scale">
+				<table class = "table table-bordered table-striped">
+					<tr>
+						<td>A</td>
+						<td>93 and above</td>
+					</tr>
+					<tr>
+						<td>A-</td>
+						<td>92.9 to 90</td>
+					</tr>
+					<tr>
+						<td>B+</td>
+						<td>89.9 to 87</td>
+					</tr>
+					<tr>
+						<td>B</td>
+						<td>86.6 to 83</td>
+					</tr>
+					<tr>
+						<td>B-</td>
+						<td>82.9 to 80</td>
+					</tr>
+					<tr>
+						<td>C+</td>
+						<td>79.9 to 77</td>
+					</tr>
+					<tr>
+						<td>C</td>
+						<td>76.9 to 73</td>
+					</tr>
+					<tr>
+						<td>C-</td>
+						<td>72.9 to 70</td>
+					</tr>
+					<tr>
+						<td>D+</td>
+						<td>69.9 to 67</td>
+					</tr>
+					<tr>
+						<td>D</td>
+						<td>66.9 to 63</td>
+					</tr>
+					<tr>
+						<td>D-</td>
+						<td>62.9 to 60</td>
+					</tr>
+					<tr>
+						<td>E</td>
+						<td>59.9 and below</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	  </div>
+    </div>
+	<!-- End page content -->
+	</br>
+	</br>
+	</br>
+    <div id="footer">
+      <div class="container">
+        <p class="muted credit">Created by <a href="http://www.andrewjkerr.com">Andrew Kerr</a>. Found a problem? Send me an email: <a href = "mailto:andrewjkerr47@gmail.com">andrewjkerr47 (AT) gmail (DOT) com</a>.</p>
+      </div>
+    </div>
+
+  </body>
+</html>
