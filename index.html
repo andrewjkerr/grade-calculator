@@ -243,10 +243,13 @@
 			var eelquiz = parseFloat(document.getElementById('eelquiz').value);
 			
 			// Calculate the total points earned!	
-			var labGrade = ((lab1 + lab2 + lab3 + lab4 + lab5 + lab6 + lab7 + lab8 + lab9) / 900.0) * 100.0;
+			var curve = 1.3;
+			var labGrade = ((((lab1 + lab2)/2) + lab3 + lab4 + lab5 + lab6 + lab7 + lab8 + lab9) / 800.0) * 100.0;
 			var hwGrade = ((hw1 + hw2 + hw3 + hw4 + hw5 + hw6 + hw7 + hw8 + hw9 + hw10) / 40.0) * 100.0;
 			var percent = labGrade * 0.26 + hwGrade * 0.04 + eelexam1 * 0.28 + eelexam2 * 0.28 + eelquiz * 0.14;
+			var curved = percent * curve;
 			document.getElementById('finalPercent').value = percent;
+			document.getElementById('eelCurved').value = curved;
 			
 			// Set the cookie for Microprocessor grades!
 			var eelcookie = { lab1: lab1, lab2: lab2, lab3: lab3, lab4: lab4, lab5: lab5, lab6: lab6, lab7: lab7, lab8: lab8, lab9: lab9, hw1: hw1, hw2: hw2, hw3: hw3, hw4: hw4, hw5: hw5, hw6: hw6, hw7: hw7, hw8: hw8, hw9: hw9, hw10: hw10, eelexam1: eelexam1, eelexam2: eelexam2, eelquiz: eelquiz };
@@ -477,6 +480,7 @@
 						<p>Lab 1: <input text='text' id='lab1' value='0' onkeyup='setEELGrades();' /> Lab 2: <input text='text' id='lab2' value='0' onkeyup='setEELGrades();' /> Lab 3: <input text='text' id='lab3' value='0' onkeyup='setEELGrades();' /></p>
 						<p>Lab 4: <input text='text' id='lab4' value='0' onkeyup='setEELGrades();' /> Lab 5: <input text='text' id='lab5' value='0' onkeyup='setEELGrades();' /> Lab 6: <input text='text' id='lab6' value='0' onkeyup='setEELGrades();' /></p>
 						<p>Lab 7: <input text='text' id='lab7' value='0' onkeyup='setEELGrades();' /> Lab 8: <input text='text' id='lab8' value='0' onkeyup='setEELGrades();' /> Lab 9: <input text='text' id='lab9' value='0' onkeyup='setEELGrades();' /></p>
+						<p><em>Updated to reflect Lab 1 and Lab 2 only being worth 50% of a regular lab.</em></p>
 					</p>
 					<p><code><u>HOMEWORK (//OUT OF FOUR)</u></code></p>
 					<p>
@@ -489,10 +493,12 @@
 					<p>
 						<p>Exam 1: <input text='text' id='eelexam1' value='0' onkeyup='setEELGrades();' /> Exam 2: <input text='text' id='eelexam2' value='0' onkeyup='setEELGrades();' /> Final Quiz: <input text='text' id='eelquiz' value='0' onkeyup='setEELGrades();' /></p>
 					</p>
-					<p><code><u>FINAL GRADE (WITHOUT CURVE) (// GRADED ON A STANDARD SCALE)</u></code></p>
+					<p><code><u>FINAL GRADE (// GRADED ON A STANDARD SCALE)</u></code></p>
 					<p>
 						<p>FINAL PERCENTAGE: <input type='text' id='finalPercent' value='0' /></p>
+						<p>CURVED* PERCENTAGE: <input type='text' id='eelCurved' value='0' /></p>
 						<p>LAB REQUIREMENT: <input type='text' id='passlab' value='No, you have not passed the lab requirement.' /></p>
+						<p>* - Please note that the current curve multiplier is <code>1.3</code> and <em>WILL</em> change based on the final quiz averages.</p>
 					</p>
 				</table>
 			</form>
