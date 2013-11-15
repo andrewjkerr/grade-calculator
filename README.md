@@ -2,7 +2,9 @@ grade-calculator
 ================
 
 A simple web interface for calculating the grade of courses that I'm taking. Built with Bootstrap, jQuery, Javascript, and 
-(jquery-cookie)[https://github.com/carhartl/jquery-cookie].
+[jquery-cookie](https://github.com/carhartl/jquery-cookie). 
+
+You can find it [here](http://www.andrewjkerr.com/grades).
 
 Features
 --------
