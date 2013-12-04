@@ -100,7 +100,6 @@
 				document.getElementById('hw7').value = eelCookieGrades.hw7;
 				document.getElementById('hw8').value = eelCookieGrades.hw8;
 				document.getElementById('hw9').value = eelCookieGrades.hw9;
-				document.getElementById('hw10').value = eelCookieGrades.hw10;
 				document.getElementById('eelexam1').value = eelCookieGrades.eelexam1;	
 				document.getElementById('eelexam2').value = eelCookieGrades.eelexam2;	
 				document.getElementById('eelquiz').value = eelCookieGrades.eelquiz;
@@ -219,6 +218,7 @@
 	<script>
 		function setEELGrades() {
 			// Define those variables!
+			var curve = parseFloat(document.getElementById('curve').value);
 			var lab1 = parseFloat(document.getElementById('lab1').value);
 			var lab2 = parseFloat(document.getElementById('lab2').value);
 			var lab3 = parseFloat(document.getElementById('lab3').value);
@@ -237,22 +237,20 @@
 			var hw7 = parseFloat(document.getElementById('hw7').value);
 			var hw8 = parseFloat(document.getElementById('hw8').value);
 			var hw9 = parseFloat(document.getElementById('hw9').value);
-			var hw10 = parseFloat(document.getElementById('hw10').value);
 			var eelexam1 = parseFloat(document.getElementById('eelexam1').value);	
 			var eelexam2 = parseFloat(document.getElementById('eelexam2').value);	
 			var eelquiz = parseFloat(document.getElementById('eelquiz').value);
 			
-			// Calculate the total points earned!	
-			var curve = 1.3;
+			// Calculate the total points earned!
 			var labGrade = ((((lab1 + lab2)/2) + lab3 + lab4 + lab5 + lab6 + lab7 + lab8 + lab9) / 800.0) * 100.0;
-			var hwGrade = ((hw1 + hw2 + hw3 + hw4 + hw5 + hw6 + hw7 + hw8 + hw9 + hw10) / 40.0) * 100.0;
+			var hwGrade = ((hw1 + hw2 + hw3 + hw4 + hw5 + hw6 + hw7 + hw8 + hw9) / 36.0) * 100.0;
 			var percent = labGrade * 0.26 + hwGrade * 0.04 + eelexam1 * 0.28 + eelexam2 * 0.28 + eelquiz * 0.14;
 			var curved = percent * curve;
 			document.getElementById('finalPercent').value = percent;
 			document.getElementById('eelCurved').value = curved;
 			
 			// Set the cookie for Microprocessor grades!
-			var eelcookie = { lab1: lab1, lab2: lab2, lab3: lab3, lab4: lab4, lab5: lab5, lab6: lab6, lab7: lab7, lab8: lab8, lab9: lab9, hw1: hw1, hw2: hw2, hw3: hw3, hw4: hw4, hw5: hw5, hw6: hw6, hw7: hw7, hw8: hw8, hw9: hw9, hw10: hw10, eelexam1: eelexam1, eelexam2: eelexam2, eelquiz: eelquiz };
+			var eelcookie = { lab1: lab1, lab2: lab2, lab3: lab3, lab4: lab4, lab5: lab5, lab6: lab6, lab7: lab7, lab8: lab8, lab9: lab9, hw1: hw1, hw2: hw2, hw3: hw3, hw4: hw4, hw5: hw5, hw6: hw6, hw7: hw7, hw8: hw8, hw9: hw9, eelexam1: eelexam1, eelexam2: eelexam2, eelquiz: eelquiz };
 			$.cookie('eelgrades',eelcookie);
 			
 			// Check for lab requirement!
@@ -487,7 +485,6 @@
 						<p>HW 1: <input text='text' id='hw1' value='0' onkeyup='setEELGrades();' /> HW 2: <input text='text' id='hw2' value='0' onkeyup='setEELGrades();' /> HW 3: <input text='text' id='hw3' value='0' onkeyup='setEELGrades();' /></p>
 						<p>HW 4: <input text='text' id='hw4' value='0' onkeyup='setEELGrades();' /> HW 5: <input text='text' id='hw5' value='0' onkeyup='setEELGrades();' /> HW 6: <input text='text' id='hw6' value='0' onkeyup='setEELGrades();' /></p>
 						<p>HW 7: <input text='text' id='hw7' value='0' onkeyup='setEELGrades();' /> HW 8: <input text='text' id='hw8' value='0' onkeyup='setEELGrades();' /> HW 9: <input text='text' id='hw9' value='0' onkeyup='setEELGrades();' /></p>
-						<p>HW 10: <input text='text' id='hw10' value='0' onkeyup='setEELGrades();' /></p>
 					</p>
 					<p><code><u>EXAMS/FINAL QUIZ (//OUT OF 100)</u></code></p>
 					<p>
@@ -497,8 +494,9 @@
 					<p>
 						<p>FINAL PERCENTAGE: <input type='text' id='finalPercent' value='0' /></p>
 						<p>CURVED* PERCENTAGE: <input type='text' id='eelCurved' value='0' /></p>
+						<p>CURVE MULTIPLIER: <input type='text' id='curve' value='1.1' /></p>
 						<p>LAB REQUIREMENT: <input type='text' id='passlab' value='No, you have not passed the lab requirement.' /></p>
-						<p>* - Please note that the current curve multiplier is <code>1.3</code> and <em>WILL</em> change based on the final quiz averages.</p>
+						<p>* - Please note that my calculated curve multiplier is <code>1.1</code> and <em>MAY</em> be incorrect. Feel free to play around with other curves though.</p>
 					</p>
 				</table>
 			</form>
