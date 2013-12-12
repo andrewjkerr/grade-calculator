@@ -121,7 +121,7 @@
 				document.getElementById('cdaquiz2').value = cdaCookieGrades.cdaquiz2;
 				document.getElementById('cdaquiz3').value = cdaCookieGrades.cdaquiz3;
 				document.getElementById('cdaquiz4').value = cdaCookieGrades.cdaquiz4;
-				document.getElementById('cdaquiz5').value = cdaCookieGrades.cdaquiz5;
+				document.getElementById('cdaquiz5').value = 20;
 				document.getElementById('cdahw1').value = cdaCookieGrades.cdahw1;
 				document.getElementById('cdahw2').value = cdaCookieGrades.cdahw2;
 				document.getElementById('cdahw3').value = cdaCookieGrades.cdahw3;
@@ -133,6 +133,26 @@
 				document.getElementById('cdaexam3').value = cdaCookieGrades.cdaexam3;
 				document.getElementById('cdafinal').value = cdaCookieGrades.cdafinal;
 				setCDAGrades();
+			}
+			catch(e){
+				// do nothing!
+			}
+			
+		}
+	</script>
+	<script>
+		function loadPowerGrades(){
+		
+			$.cookie.json = true;
+			
+			var powerCookieGrades = $.cookie('powergrades');
+			try{
+				document.getElementById('powertl').value = powerCookieGrades.powertl;
+				document.getElementById('powertm').value = powerCookieGrades.powertm;
+				document.getElementById('powerth').value = powerCookieGrades.powerth;
+				document.getElementById('powertf').value = powerCookieGrades.powertf;
+				document.getElementById('powerhw').value = powerCookieGrades.powerhw;
+				setPowerGrades();
 			}
 			catch(e){
 				// do nothing!
@@ -273,7 +293,7 @@
 			var cdaquiz2 = parseFloat(document.getElementById('cdaquiz2').value);
 			var cdaquiz3 = parseFloat(document.getElementById('cdaquiz3').value);
 			var cdaquiz4 = parseFloat(document.getElementById('cdaquiz4').value);
-			var cdaquiz5 = parseFloat(document.getElementById('cdaquiz5').value);
+			var cdaquiz5 = 20;
 			var cdahw1 = parseFloat(document.getElementById('cdahw1').value);
 			var cdahw2 = parseFloat(document.getElementById('cdahw2').value);
 			var cdahw3 = parseFloat(document.getElementById('cdahw3').value);
@@ -288,8 +308,8 @@
 			// Calculate the total points earned!	
 			var cdaQuizGrade = cdaquiz1 + cdaquiz2 + cdaquiz3 + cdaquiz4 + cdaquiz5;
 			var cdaHWGrade = ((cdahw1 + cdahw2 + cdahw3 + cdahw4 + cdahw5 + cdahw6) / 240.0) * 100.0;
-			var cdaExamGrade = ((cdaexam1 + cdaexam2 + cdaexam3) / 300.0) * 100.0;
-			var cdaPercent = cdaQuizGrade * 0.10 + cdaHWGrade * 0.24 + cdaExamGrade * .42 + cdafinal * .24;
+			var cdaExams = ((cdaexam1 + cdaexam2 + cdaexam3) / 420) * 42;
+			var cdaPercent = cdaQuizGrade * 0.10 + cdaHWGrade * 0.24 + cdaExams + cdafinal * .24;
 			document.getElementById('cdaPercent').value = cdaPercent;
 			
 			// Set the cookie for Comp Org grades!
@@ -346,9 +366,84 @@
 			}
 		}
 	</script>
+	<script>
+		function setPowerGrades() {
+			// Define those variables!
+			var powertl = parseFloat(document.getElementById('powertl').value);
+			var powertm = parseFloat(document.getElementById('powertm').value);
+			var powerth = parseFloat(document.getElementById('powerth').value);
+			var powertf = parseFloat(document.getElementById('powertf').value);
+			var powert = (((.1 * powertl) + (.2 * powertm) + (.2 * powerth) + (.35 * powertf)) / 0.85);
+			
+			var powerhw = parseFloat(document.getElementById('powerhw').value);
+			var S = 0;
+			if(powerhw > powert){
+				S = 0.15 * powerhw + 0.85 * powert;
+			}
+			else{
+				S = (0.15 + (.002 * (powert - powerhw))) * powerhw + (.85 - (.002 * (powert - powerhw))) * powert;
+			}
+			document.getElementById('powert').value = powert;
+			document.getElementById('powers').value = S;
+			
+			// Set the cookie for Comp Org grades!
+			var powercookie = { powertl: powertl, powertm: powertm, powerth: powerth, powertf: powertf, powerhw: powerhw };
+			$.cookie('powergrades',powercookie);
+			
+			// Select letter grade!
+			if(S >= 92.5){
+				document.getElementById('powerletter').value = "A";
+			}
+			
+			else if(92.49 >= S && S >= 90){
+				document.getElementById('powerletter').value = "A-";
+			}
+			
+			else if(89.9>= S && S >= 87.5){
+				document.getElementById('powerletter').value = "B+";
+			}
+			
+			else if(87.49 >= S && S >= 82.5){
+				document.getElementById('powerletter').value = "B";
+			}
+			
+			else if(82.49 >= S && S >= 80){
+				document.getElementById('powerletter').value = "B-";
+			}
+			
+			else if(79.99 >= S && S >= 77.5){
+				document.getElementById('powerletter').value = "C+";
+			}
+			
+			else if(77.49 >= S && S >= 72.5){
+				document.getElementById('powerletter').value = "C";
+			}
+			
+			else if(72.49 >= S && S >= 70){
+				document.getElementById('powerletter').value = "C-";
+			}
+			
+			else if(69.99 >= S && S >= 67.5){
+				document.getElementById('powerletter').value = "D+";
+			}
+			
+			else if(67.49 >= S && S >= 62.5){
+				document.getElementById('powerletter').value = "D";
+			}
+			
+			else if(62.49 >= S && S >= 60){
+				document.getElementById('powerletter').value = "D-";
+			}
+			
+			else{
+				document.getElementById('powerletter').value = "E";
+			}
+		}
+	</script>
+	
   </head>
 
-  <body onload="loadMANGrades(); loadEELGrades(); loadCDAGrades();">
+  <body onload="loadMANGrades(); loadEELGrades(); loadCDAGrades(); loadPowerGrades();">
 
 
     <!-- Part 1: Wrap all page content here -->
@@ -513,7 +608,7 @@
 						Quiz 2: <input text='text' id='cdaquiz2'  value='0' onkeyup='setCDAGrades();' /> 
 						Quiz 3: <input text='text' id='cdaquiz3' value='0' onkeyup='setCDAGrades();' /></p>
 						<p>Quiz 4: <input text='text' id='cdaquiz4' value='0' onkeyup='setCDAGrades();' />
-						Quiz 5: <input text='text' id='cdaquiz5' value='0' onkeyup='setCDAGrades();' /></p>
+						Quiz 5: <input text='text' id='cdaquiz5' value='20' readonly /></p>
 					</p>
 					<p><code><u>HW (//OUT OF 40 POINTS)</u></code></p>
 					<p>
@@ -524,11 +619,14 @@
 						HW 5: <input text='text' id='cdahw5' value='0' onkeyup='setCDAGrades();' />
 						HW 6: <input text='text' id='cdahw6' value='0' onkeyup='setCDAGrades();' /></p>
 					</p>
-					<p><code><u>EXAMS (//ENTER PERCENTAGE) </u></code></p>
+					<p><code><u>EXAMS (//ENTER POINT VALUE) </u></code></p>
 					<p>
-						<p>Exam 1: <input text='text' id='cdaexam1' value='0' onkeyup='setCDAGrades();' />
-						Exam 2: <input text='text' id='cdaexam2' value='0' onkeyup='setCDAGrades();' />
-						Exam 3: <input text='text' id='cdaexam3' value='0' onkeyup='setCDAGrades();' /></p>
+						<p>Exam 1 (out of 120): <input text='text' id='cdaexam1' value='0' onkeyup='setCDAGrades();' />
+						Exam 2 (out of 140): <input text='text' id='cdaexam2' value='0' onkeyup='setCDAGrades();' />
+						Exam 3 (out of 160): <input text='text' id='cdaexam3' value='0' onkeyup='setCDAGrades();' /></p>
+					</p>
+					<p><code><u>FINAL EXAM (//ENTER PERCENT) </u></code></p>
+					<p>
 						<p>Final Exam: <input text='text' id='cdafinal' value='0' onkeyup='setCDAGrades();' /></p>
 					</p>
 					<p><code><u>FINAL GRADE</u></code></p>
@@ -591,6 +689,32 @@
 					</tr>
 				</table>
 			</div>
+		</div>
+		<!-- Management Grade Calculator -->
+        <p class="lead"><div class="className"><h3>EEL3211 - Basic Electric Energy</p></h3></div>
+		<div class="calc">
+			<form>
+				<table>
+					<p><code><u>EXAMS (// ENTER PERCENTAGE)</u></code></p>
+					<p>
+						<p>Lowest Exam Score: <input text='text' id='powertl' value='0' onkeyup='setPowerGrades();' />
+						Middle Exam Score: <input text='text' id='powertm' value='0' onkeyup='setPowerGrades();' />
+						Highest Exam Score: <input text='text' id='powerth' value='0' onkeyup='setPowerGrades();' />
+						</p>
+						<p>Final Exam Score: <input text='text' id='powertf' value='0' onkeyup='setPowerGrades();' /></p>
+					</p>
+					<p><code><u>HW (// ENTER PERCENTAGE)</u></code></p>
+					<p>
+						<p>Homework: <input text='text' id='powerhw' value='0' onkeyup='setPowerGrades();' /></p>
+					</p>
+					<p><code><u>FINAL GRADE</u></code></p>
+					<p>
+						<p>Test Score (T): <input type='text' id='powert' value='0' readonly /></p>
+						<p>TOTAL POINTS: <input type='text' id='powers' value='0' readonly /></p>
+						<p>LETTER GRADE: <input type='text' id='powerletter' value='E' readonly /></p>
+					</p>
+				</table>
+			</form>
 		</div>
 	  </div>
     </div>
